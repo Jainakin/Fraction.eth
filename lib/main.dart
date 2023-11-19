@@ -3,6 +3,7 @@ import 'package:nft_fraction/providers/wallet_connect_provider.dart';
 import 'package:nft_fraction/providers/wallet_nfts_provider.dart';
 import 'package:nft_fraction/providers/welcome_page_provider.dart';
 import 'package:nft_fraction/view/home/home_screen.dart';
+import 'package:nft_fraction/view/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 
@@ -55,7 +56,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Fractional.eth',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primarySwatch: Colors.blue,
           brightness: Brightness.light,
           useMaterial3: true,
         ),
@@ -64,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         home: Web3ModalTheme(
           themeData: themeData,
           isDarkMode: true,
-          child: const HomeScreen(),
+          child: const WelcomeScreen(),
         ),
       ),
     );

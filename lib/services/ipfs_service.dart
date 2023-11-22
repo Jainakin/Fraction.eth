@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_ipfs/flutter_ipfs.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nft_fraction/constants.dart';
+import 'package:nft_fraction/providers/wallet_connect_provider.dart';
+import 'package:provider/provider.dart';
 
 class IpfsService {
   final ImagePicker picker = ImagePicker();
@@ -30,27 +31,61 @@ class IpfsService {
 
         throw Exception();
       } else {
-        // final String cid = await FlutterIpfs().uploadToIpfs(image.path);
+        FormData formData = FormData.fromMap(
+          {
+            'file': await MultipartFile.fromFile(
+              image.path,
+              filename: image.name,
+            ),
+          },
+        );
 
-        final String cid = '';
+        final Response response = await dio.post(
+          'https://api.nftport.xyz/v0/files',
+          options: Options(
+            headers: {
+              'Authorization': nftPortApiKey,
+              'Content-Type': 'multipart/form-data',
+              'Accept': 'application/json',
+            },
+          ),
+          data: formData,
+        );
 
-        final String imageUri = '$ipfsBaseUrl$cid';
+        final result = response.data;
+
+        final imageUri = result['ipfs_url'];
 
         debugPrint(imageUri);
 
         return imageUri;
       }
-    } catch (e) {
-      debugPrint('Error at ipfs upload: $e');
+    } on DioException catch (error) {
+      debugPrint('Error at image upload: $error');
+      debugPrint(error.message);
+      debugPrint(error.response?.data.toString() ?? '');
+
       SnackBar(
         content: Text(
-          'Error at image upload: $e',
+          'Error at image upload: $error',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 15),
         ),
       );
 
-      return 'Error at ipfs upload: $e';
+      return 'Error at image upload: $error';
+    } catch (error) {
+      debugPrint('Error at image upload: $error');
+
+      SnackBar(
+        content: Text(
+          'Error at image upload: $error',
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 15),
+        ),
+      );
+
+      return 'Error at image upload: $error';
     }
   }
 
@@ -119,15 +154,23 @@ class IpfsService {
         builder: (context) {
           return Platform.isAndroid
               ? const CircularProgressIndicator(
-                  color: Colors.purple,
+                  color: CupertinoColors.activeBlue,
                 )
               : const CupertinoActivityIndicator(
-                  color: Colors.purple,
+                  color: CupertinoColors.activeBlue,
                 );
         },
       );
 
       final String metadataUri = await uploadMetadata();
+
+      late String mintToAddress;
+
+      if (context.mounted) {
+        mintToAddress =
+            Provider.of<WalletConnectProvider>(context, listen: false)
+                .walletAddess;
+      }
 
       final Response response = await dio.post(
         'https://api.nftport.xyz/v0/mints/customizable',
@@ -140,10 +183,10 @@ class IpfsService {
         ),
         data: jsonEncode(
           {
-            "chain": "polygon",
+            "chain": "goerli",
             "contract_address": mintingContractAddress,
             "metadata_uri": metadataUri,
-            "mint_to_address": walletAddressPolygon,
+            "mint_to_address": mintToAddress,
           },
         ),
       );

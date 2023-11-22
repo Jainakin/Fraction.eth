@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nft_fraction/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:nft_fraction/providers/wallet_connect_provider.dart';
 import 'package:nft_fraction/providers/wallet_nfts_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -21,10 +22,13 @@ class _NftScreenState extends State<NftScreen> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         AlchemyNftService(context).getWalletNfts(
-          walletAddress: walletAddressPolygon,
+          walletAddress:
+              Provider.of<WalletConnectProvider>(context, listen: false)
+                  .walletAddess,
         );
       },
     );
@@ -33,7 +37,21 @@ class _NftScreenState extends State<NftScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        toolbarHeight: kToolbarHeight + 10,
+        backgroundColor: Colors.black,
+        elevation: 4.0,
+        title: Text(
+          'Wallet NFTs',
+          style: GoogleFonts.dmSans(
+            color: Colors.white,
+            fontSize: 20.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         bottom: false,
         child: Consumer<WalletNftsProvider>(
@@ -49,10 +67,10 @@ class _NftScreenState extends State<NftScreen> {
                         ? Center(
                             child: Platform.isAndroid
                                 ? const CircularProgressIndicator(
-                                    color: Colors.purple,
+                                    color: CupertinoColors.activeBlue,
                                   )
                                 : const CupertinoActivityIndicator(
-                                    color: Colors.purple,
+                                    color: CupertinoColors.activeBlue,
                                   ),
                           )
                         : GridView.builder(

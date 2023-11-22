@@ -24,7 +24,7 @@ class AlchemyNftService {
       dio.options.headers['Authorization'] = 'Bearer $alchemyApiKeyPolygon';
 
       final Response response = await dio.get(
-        'https://polygon-mainnet.g.alchemy.com/nft/v2/getNFTs?owner=$walletAddress&withMetadata=true',
+        'https://eth-goerli.g.alchemy.com/nft/v2/getNFTs?owner=$walletAddress&withMetadata=true',
         // 'https://polygon-mainnet.g.alchemy.com/nft/v2/$alchemyApiKeyPolygon/getNFTs?owner=$walletAddress&withMetadata=true&pageSize=100',
       );
 

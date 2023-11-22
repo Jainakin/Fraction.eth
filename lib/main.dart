@@ -21,22 +21,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final themeData = Web3ModalThemeData(
     darkColors: Web3ModalColors.darkMode.copyWith(
-      accent100: Colors.purple,
+      accent100: const Color(0xFF007bFF),
       background125: Colors.black,
     ),
   );
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // WidgetsBinding.instance.addObserver(this);
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     setState(() {
-  //       final platformDispatcher = View.of(context).platformDispatcher;
-  //       final platformBrightness = platformDispatcher.platformBrightness;
-  //     });
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +53,7 @@ class _MyAppState extends State<MyApp> {
         home: Web3ModalTheme(
           themeData: themeData,
           isDarkMode: true,
-          child: const WelcomeScreen(),
+          child: const HomeScreen(),
         ),
       ),
     );

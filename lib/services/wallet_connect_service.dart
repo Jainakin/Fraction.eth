@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nft_fraction/providers/wallet_connect_provider.dart';
 import 'package:nft_fraction/utils/string_constants.dart';
+import 'package:nft_fraction/view/nft-screen/nft_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
-import 'package:web3modal_flutter/services/w3m_service/w3m_service.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 class WalletConnectService {
@@ -13,13 +12,17 @@ class WalletConnectService {
 
   late WalletConnectProvider provider;
 
-  Future<void> initWalletService(BuildContext context) async {
+  late BuildContext context;
+
+  WalletConnectService({required this.context});
+
+  Future<void> initWalletService() async {
     web3App = await Web3App.createInstance(
       projectId: '3f271949a264a21c076cba504199dca9',
       logLevel: LogLevel.error,
       metadata: const PairingMetadata(
         name: 'F.eth',
-        description: 'NFT Fractionization',
+        description: 'Fraction.eth',
         url: 'https://www.walletconnect.com/',
         icons: ['https://web3modal.com/images/rpc-illustration.png'],
         redirect: Redirect(
@@ -34,7 +37,7 @@ class WalletConnectService {
 
     await web3App.init();
 
-    print('init 1');
+    debugPrint('init 1');
 
     if (context.mounted) {
       Provider.of<WalletConnectProvider>(context, listen: false)
@@ -57,22 +60,44 @@ class WalletConnectService {
 
     await w3mService.init();
 
-    print('init 2');
+    debugPrint('init 2');
   }
 
   void onSessionPing(SessionPing? args) {
-    debugPrint('[$runtimeType] ${StringConstants.receivedPing}: $args');
+    debugPrint(
+        'Session ping [$runtimeType] ${StringConstants.receivedPing}: $args');
   }
 
   void onSessionEvent(SessionEvent? args) {
-    debugPrint('[$runtimeType] ${StringConstants.receivedEvent}: $args');
+    debugPrint(
+        'Session Event [$runtimeType] ${StringConstants.receivedEvent}: $args');
   }
 
   void onWeb3AppConnect(SessionConnect? args) {
-    debugPrint('$args');
+    debugPrint('Connect $args');
+
+    final String walletAddress = args!
+        .session.namespaces.entries.first.value.accounts.first
+        .split(':')
+        .last;
+
+    debugPrint('address $walletAddress');
+
+    provider = Provider.of<WalletConnectProvider>(context, listen: false);
+
+    provider.setWalletAddress(walletAddress);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NftScreen(),
+      ),
+    );
+
+    debugPrint('done');
   }
 
   void onWeb3AppDisconnect(SessionDelete? args) {
-    debugPrint('$args');
+    debugPrint('Disconnect $args');
   }
 }

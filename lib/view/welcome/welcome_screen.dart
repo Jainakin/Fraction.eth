@@ -6,11 +6,9 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nft_fraction/providers/wallet_connect_provider.dart';
 import 'package:nft_fraction/providers/welcome_page_provider.dart';
-import 'package:nft_fraction/services/wallet_connect_service.dart';
+import 'package:nft_fraction/view/nft-screen/nft_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
-import 'package:web3modal_flutter/widgets/w3m_connect_wallet_button.dart';
-import 'package:web3modal_flutter/widgets/w3m_network_select_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -20,12 +18,12 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  WalletConnectService walletService = WalletConnectService();
-
   @override
   void initState() {
     super.initState();
-    walletService.initWalletService(context);
+
+    Provider.of<WalletConnectProvider>(context, listen: false)
+        .initWalletService(context);
   }
 
   @override
@@ -113,11 +111,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ? Column(
                           children: [
                             W3MNetworkSelectButton(
-                              service: walletService.w3mService,
+                              service:
+                                  Provider.of<WalletConnectProvider>(context)
+                                      .walletService
+                                      .w3mService,
                             ),
                             const SizedBox(height: 16.0),
                             W3MConnectWalletButton(
-                              service: walletService.w3mService,
+                              service:
+                                  Provider.of<WalletConnectProvider>(context)
+                                      .walletService
+                                      .w3mService,
                               state: ConnectButtonState.none,
                             ),
                           ],
@@ -125,6 +129,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       : const CupertinoActivityIndicator(
                           color: Colors.blue,
                         ),
+                  // const SizedBox(height: 16),
+                  CupertinoButton(
+                    borderRadius: BorderRadius.circular(50.0),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NftScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Continue',
+                      style: GoogleFonts.dmSans(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                   SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
                 ],
               ),

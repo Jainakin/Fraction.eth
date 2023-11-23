@@ -105,8 +105,8 @@ class IpfsService {
         data: jsonEncode(
           {
             'file_url': imageUri,
-            'name': 'Test',
-            'description': 'F.eth Minting Test',
+            'name': 'F.eth',
+            'description': 'Fraction.eth NFT',
           },
         ),
       );
@@ -183,7 +183,7 @@ class IpfsService {
         ),
         data: jsonEncode(
           {
-            "chain": "goerli",
+            "chain": "polygon",
             "contract_address": mintingContractAddress,
             "metadata_uri": metadataUri,
             "mint_to_address": mintToAddress,
@@ -205,6 +205,10 @@ class IpfsService {
       debugPrint(error.message);
       debugPrint(error.response?.data.toString() ?? '');
 
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
+
       SnackBar(
         content: Text(
           'Error at minting: $error',
@@ -215,11 +219,15 @@ class IpfsService {
 
       return;
     } catch (error) {
-      debugPrint('Error at minting upload: $error');
+      debugPrint('Error at minting: $error');
+
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
 
       SnackBar(
         content: Text(
-          'Error at minting upload: $error',
+          'Error at minting: $error',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 15),
         ),

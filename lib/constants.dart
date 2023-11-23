@@ -10,4 +10,7 @@ const String alchemyApiKeyGoerli = 'MvKq5SJuVM_WMVV9uhmij_ZfwKqY3X7D';
 const String alchemyApiKeyPolygon = 'kTeorOSOo5oPv3J-Ux1KTPR94Tb1lqZn';
 
 const String mintingContractAddress =
-    '0x04a119A53A68F8Ad7BC9453D9B0a84cF34A20Bf3';
+    '0x62Bd5045B4Bd17C0339e2656bC78A365aDd49567';
+
+const String fractionizeContractAddress =
+    '0xAD600EC78b7610E15A997335c6D19f13176D6c25';

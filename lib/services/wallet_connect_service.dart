@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nft_fraction/providers/wallet_connect_provider.dart';
 import 'package:nft_fraction/utils/string_constants.dart';
-import 'package:nft_fraction/view/nft-screen/nft_screen.dart';
+import 'package:nft_fraction/view/home/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 
@@ -90,7 +90,7 @@ class WalletConnectService {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const NftScreen(),
+        builder: (context) => const HomeScreen(),
       ),
     );
 

@@ -23,5 +23,10 @@ class WalletNftsProvider extends ChangeNotifier {
     walletNfts.addAll(nfts);
     notifyListeners();
   }
+
+  void removeWalletNft(int index) {
+    walletNfts.removeAt(index);
+    notifyListeners();
+  }
   //// WALLET NFTS ////
 }

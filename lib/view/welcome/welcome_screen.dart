@@ -6,7 +6,7 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nft_fraction/providers/wallet_connect_provider.dart';
 import 'package:nft_fraction/providers/welcome_page_provider.dart';
-import 'package:nft_fraction/view/nft-screen/nft_screen.dart';
+import 'package:nft_fraction/view/home/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 
@@ -29,6 +29,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Consumer<WelcomePageProvider>(
         builder: (context, provider, child) {
@@ -136,7 +137,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const NftScreen(),
+                          builder: (context) => const HomeScreen(),
                         ),
                       );
                     },

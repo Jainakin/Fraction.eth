@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -43,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 duration: const Duration(milliseconds: 500),
                 child: Container(
                   key: ValueKey<int>(provider.page + 1),
+                  height: screenHeight + 0.6,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image:
@@ -51,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                    filter: ImageFilter.blur(sigmaX: 24.0, sigmaY: 24.0),
                     child: Container(
                       color: Colors.black.withOpacity(0.5),
                     ),
@@ -62,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: MediaQuery.of(context).padding.top + 24.0),
+                  SizedBox(height: MediaQuery.of(context).padding.top + 8.0),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(

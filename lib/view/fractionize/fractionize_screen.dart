@@ -43,7 +43,7 @@ class _FractionizeScreenState extends State<FractionizeScreen> {
         backgroundColor: Colors.black,
         elevation: 4.0,
         title: Text(
-          'Select NFT',
+          'Wallet NFTs',
           style: GoogleFonts.dmSans(
             color: Colors.white,
             fontSize: 20.0,
@@ -52,91 +52,212 @@ class _FractionizeScreenState extends State<FractionizeScreen> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          SafeArea(
-            bottom: false,
-            child: Consumer<WalletNftsProvider>(
-              builder: (context, provider, child) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: provider.walletNftsLoading
-                            ? Center(
-                                child: Platform.isAndroid
-                                    ? const CircularProgressIndicator(
-                                        color: CupertinoColors.activeBlue,
-                                      )
-                                    : const CupertinoActivityIndicator(
-                                        color: CupertinoColors.activeBlue,
-                                      ),
-                              )
-                            : GridView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 1.0,
-                                  mainAxisSpacing: 12.0,
-                                  crossAxisSpacing: 12.0,
-                                ),
-                                itemCount: provider.walletNfts.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet<void>(
-                                        context: context,
-                                        backgroundColor: Colors.black,
-                                        builder: (BuildContext context) {
-                                          return FractionizeModalSheet(
-                                              index: index);
-                                        },
+      body: SafeArea(
+        bottom: false,
+        child: Consumer<WalletNftsProvider>(
+          builder: (context, provider, child) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: provider.walletNftsLoading
+                        ? Center(
+                            child: Platform.isAndroid
+                                ? const CircularProgressIndicator(
+                                    color: CupertinoColors.activeBlue,
+                                  )
+                                : const CupertinoActivityIndicator(
+                                    color: CupertinoColors.activeBlue,
+                                  ),
+                          )
+                        : GridView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 1.0,
+                              mainAxisSpacing: 12.0,
+                              crossAxisSpacing: 12.0,
+                            ),
+                            itemCount: provider.walletNfts.length,
+                            itemBuilder: (context, index) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet<void>(
+                                      context: context,
+                                      backgroundColor: Colors.black,
+                                      builder: (BuildContext context) {
+                                        return FractionizeModalSheet(
+                                            index: index);
+                                      },
+                                    );
+                                  },
+                                  child: CachedNetworkImage(
+                                    imageUrl: provider.walletNfts[index].image!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) {
+                                      return Shimmer.fromColors(
+                                        baseColor: const Color(0xFF23262F),
+                                        highlightColor: const Color(0xFF2D3038),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[900],
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                        ),
                                       );
                                     },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            provider.walletNfts[index].image!,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) {
-                                          return Shimmer.fromColors(
-                                            baseColor: const Color(0xFF23262F),
-                                            highlightColor:
-                                                const Color(0xFF2D3038),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[900],
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        errorWidget: (context, url, error) {
-                                          return const Icon(Icons.error);
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                      ),
-                    ],
+                                    errorWidget: (context, url, error) {
+                                      return const Icon(Icons.error);
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                   ),
-                );
-              },
-            ),
-          ),
-        ],
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 }
+
+// class FractionizeScreen extends StatefulWidget {
+//   const FractionizeScreen({super.key});
+
+//   @override
+//   State<FractionizeScreen> createState() => _FractionizeScreenState();
+// }
+
+// class _FractionizeScreenState extends State<FractionizeScreen> {
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     WidgetsBinding.instance.addPostFrameCallback(
+//       (_) {
+//         AlchemyNftService(context).getWalletNfts(
+//           walletAddress:
+//               Provider.of<WalletConnectProvider>(context, listen: false)
+//                   .walletAddess,
+//         );
+//       },
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.black,
+//       appBar: AppBar(
+//         toolbarHeight: kToolbarHeight + 10,
+//         backgroundColor: Colors.black,
+//         elevation: 4.0,
+//         title: Text(
+//           'Select NFT',
+//           style: GoogleFonts.dmSans(
+//             color: Colors.white,
+//             fontSize: 20.0,
+//             fontWeight: FontWeight.w600,
+//           ),
+//         ),
+//         centerTitle: true,
+//       ),
+//       body: Column(
+//         children: [
+//           SafeArea(
+//             bottom: false,
+//             child: Consumer<WalletNftsProvider>(
+//               builder: (context, provider, child) {
+//                 return Padding(
+//                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
+//                   child: Column(
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Expanded(
+//                         child: provider.walletNftsLoading
+//                             ? Center(
+//                                 child: Platform.isAndroid
+//                                     ? const CircularProgressIndicator(
+//                                         color: CupertinoColors.activeBlue,
+//                                       )
+//                                     : const CupertinoActivityIndicator(
+//                                         color: CupertinoColors.activeBlue,
+//                                       ),
+//                               )
+//                             : GridView.builder(
+//                                 physics: const BouncingScrollPhysics(),
+//                                 gridDelegate:
+//                                     const SliverGridDelegateWithFixedCrossAxisCount(
+//                                   crossAxisCount: 2,
+//                                   childAspectRatio: 1.0,
+//                                   mainAxisSpacing: 12.0,
+//                                   crossAxisSpacing: 12.0,
+//                                 ),
+//                                 itemCount: provider.walletNfts.length,
+//                                 itemBuilder: (context, index) {
+//                                   return GestureDetector(
+//                                     onTap: () {
+//                                       showModalBottomSheet<void>(
+//                                         context: context,
+//                                         backgroundColor: Colors.black,
+//                                         builder: (BuildContext context) {
+//                                           return FractionizeModalSheet(
+//                                               index: index);
+//                                         },
+//                                       );
+//                                     },
+//                                     child: ClipRRect(
+//                                       borderRadius: BorderRadius.circular(8.0),
+//                                       child: CachedNetworkImage(
+//                                         imageUrl:
+//                                             provider.walletNfts[index].image!,
+//                                         fit: BoxFit.cover,
+//                                         placeholder: (context, url) {
+//                                           return Shimmer.fromColors(
+//                                             baseColor: const Color(0xFF23262F),
+//                                             highlightColor:
+//                                                 const Color(0xFF2D3038),
+//                                             child: Container(
+//                                               decoration: BoxDecoration(
+//                                                 color: Colors.grey[900],
+//                                                 borderRadius:
+//                                                     BorderRadius.circular(8.0),
+//                                               ),
+//                                             ),
+//                                           );
+//                                         },
+//                                         errorWidget: (context, url, error) {
+//                                           return const Icon(Icons.error);
+//                                         },
+//                                       ),
+//                                     ),
+//                                   );
+//                                 },
+//                               ),
+//                       ),
+//                     ],
+//                   ),
+//                 );
+//               },
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class FractionizeModalSheet extends StatefulWidget {
   const FractionizeModalSheet({super.key, required this.index});

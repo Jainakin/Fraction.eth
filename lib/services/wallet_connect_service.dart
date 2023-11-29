@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nft_fraction/providers/wallet_connect_provider.dart';
 import 'package:nft_fraction/storage/secure_storage.dart';
 import 'package:nft_fraction/utils/string_constants.dart';
-import 'package:nft_fraction/view/home/home_screen.dart';
 import 'package:nft_fraction/view/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
@@ -23,11 +22,17 @@ class WalletConnectService {
   Future<void> initWalletService() async {
     final String address = await storage.readAddress() ?? '';
 
+    final String connected = await storage.readConnected() ?? '';
+
     if (address.isNotEmpty) {
       // ignore: use_build_context_synchronously
       provider = Provider.of<WalletConnectProvider>(context, listen: false);
 
       provider.setWalletAddress(address);
+
+      if (connected == 'true') {
+        provider.setConnected(true);
+      }
     }
 
     web3App = await Web3App.createInstance(
@@ -79,13 +84,6 @@ class WalletConnectService {
   void onSessionPing(SessionPing? args) {
     debugPrint(
         'Session ping [$runtimeType] ${StringConstants.receivedPing}: $args');
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
-    );
   }
 
   void onSessionEvent(SessionEvent? args) {
@@ -109,11 +107,19 @@ class WalletConnectService {
 
     provider.setWalletAddress(walletAddress);
 
+    storage.setConnected('true');
+
+    provider.setConnected(true);
+
     debugPrint('done');
   }
 
   void onWeb3AppDisconnect(SessionDelete? args) {
     debugPrint('Disconnect $args');
+
+    provider = Provider.of<WalletConnectProvider>(context, listen: false);
+
+    provider.setConnected(false);
 
     Navigator.pushAndRemoveUntil(
       context,

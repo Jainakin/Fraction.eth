@@ -21,4 +21,18 @@ class SecureStorage {
     await storage.delete(key: 'address');
   }
   //// ADDRESS ////
+
+  //// CONNECTED ////
+  Future<String?> readConnected() async {
+    return await storage.read(key: 'connected');
+  }
+
+  Future<void> setConnected(String value) async {
+    await storage.write(key: 'connected', value: value);
+  }
+
+  Future<void> deleteConnected() async {
+    await storage.delete(key: 'connected');
+  }
+  //// ADDRESS ////
 }
